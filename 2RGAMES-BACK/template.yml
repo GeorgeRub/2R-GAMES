@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Rust Lambda + API Gateway example
+
+Resources:
+  GetEventRustLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: my-rust-lambda
+      Runtime: provided.al2
+      Architectures:
+        - x86_64
+      Handler: bootstrap
+      CodeUri: ./sam-user_get_exercises/target/lambda/sam-user_get_exercises/
+      MemorySize: 128
+      Timeout: 10
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /api/v1/events
+            Method: get
+
+  PostEventRustLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: my-rust-lambda
+      Runtime: provided.al2
+      Architectures:
+        - x86_64
+      Handler: bootstrap
+      CodeUri: ./sam-user_get_exercises/target/lambda/sam-user_get_exercises/
+      MemorySize: 128
+      Timeout: 10
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /api/v1/events
+            Method: post
