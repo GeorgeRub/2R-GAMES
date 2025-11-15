@@ -1,4 +1,7 @@
 use aws_sdk_dynamodb::Client;
+use aws_sdk_dynamodb::types::AttributeValue;
+use std::collections::HashMap;
+use std::io::Error;
 
 pub async fn get_connection_to_db() -> Client {
     // tracing_subscriber::fmt::init();
@@ -10,5 +13,4 @@ pub async fn get_connection_to_db() -> Client {
         .await;
     let dynamodb_local_config = aws_sdk_dynamodb::config::Builder::from(&config).build();
     Client::from_conf(dynamodb_local_config)
-
 }
