@@ -1,4 +1,3 @@
-use crate::connection_to_db::get_connection_to_db;
 use aws_sdk_dynamodb::types::AttributeValue;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -89,55 +88,59 @@ impl Exercise {
     }
 
     pub async fn add_exercise(&self) -> Result<Exercise, Error> {
-        println!("Adding exercise!!!");
-        let check_if_exercise_exists = self.get_exercise_by_name().await;
-        match check_if_exercise_exists {
-            Some(_) => {
-                return Err(Error::new(
-                    std::io::ErrorKind::AlreadyExists,
-                    "Exercise already exists",
-                ));
-            }
-            None => (),
-        }
-        let client = get_connection_to_db().await;
-        let _ = client
-            .put_item()
-            .table_name(EXERCISE_TABLE_NAME)
-            .set_item(self.exercise_to_put_item())
-            .send()
-            .await
-            .expect("TODO: panic message");
-        println!("Added exercise!!!");
+        //TODO: implement adding exercise to db
         Ok(self.clone())
+        // println!("Adding exercise!!!");
+        // let check_if_exercise_exists = self.get_exercise_by_name().await;
+        // match check_if_exercise_exists {
+        //     Some(_) => {
+        //         return Err(Error::new(
+        //             std::io::ErrorKind::AlreadyExists,
+        //             "Exercise already exists",
+        //         ));
+        //     }
+        //     None => (),
+        // }
+        // let client = get_connection_to_db().await;
+        // let _ = client
+        //     .put_item()
+        //     .table_name(EXERCISE_TABLE_NAME)
+        //     .set_item(self.exercise_to_put_item())
+        //     .send()
+        //     .await
+        //     .expect("TODO: panic message");
+        // println!("Added exercise!!!");
+        // Ok(self.clone())
     }
 
     async fn get_exercise_by_name(&self) -> Option<Exercise> {
-        let client = get_connection_to_db().await;
-        let response = client
-            .scan()
-            .table_name(EXERCISE_TABLE_NAME)
-            .filter_expression("exercise_name = :name_search and key_name = :key_name")
-            .expression_attribute_values(
-                ":name_search".to_string(),
-                AttributeValue::S(self.exercise_name.clone()),
-            )
-            .expression_attribute_values(
-                ":key_name".to_string(),
-                AttributeValue::S(self.key_name.clone()),
-            )
-            .send()
-            .await
-            .expect("TODO: panic message");
-        println!("Got response from db: {:?}", response);
-        match response.items {
-            None => None,
-            Some(items) => {
-                if items.len() == 0 {
-                    return None;
-                }
-                Some(self.query_out_to_exercise(items[0].clone()))
-            }
-        }
+        //TODO: implement search by exercise name
+        None
+        // let client = get_connection_to_db().await;
+        // let response = client
+        //     .scan()
+        //     .table_name(EXERCISE_TABLE_NAME)
+        //     .filter_expression("exercise_name = :name_search and key_name = :key_name")
+        //     .expression_attribute_values(
+        //         ":name_search".to_string(),
+        //         AttributeValue::S(self.exercise_name.clone()),
+        //     )
+        //     .expression_attribute_values(
+        //         ":key_name".to_string(),
+        //         AttributeValue::S(self.key_name.clone()),
+        //     )
+        //     .send()
+        //     .await
+        //     .expect("TODO: panic message");
+        // println!("Got response from db: {:?}", response);
+        // match response.items {
+        //     None => None,
+        //     Some(items) => {
+        //         if items.len() == 0 {
+        //             return None;
+        //         }
+        //         Some(self.query_out_to_exercise(items[0].clone()))
+        //     }
+        // }
     }
 }

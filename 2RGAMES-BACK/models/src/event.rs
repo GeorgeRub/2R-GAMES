@@ -2,7 +2,6 @@ use crate::user::User;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use std::io::Error;
-use crate::connection_to_db::get_connection_to_db;
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct Event {
@@ -22,7 +21,7 @@ impl Event {
 
     pub async fn get_event_by_user(user: &User) -> Result<Vec<Event>, Error> {
         //TO-DO
-        let client = get_connection_to_db().await;
+        // let client = get_connection_to_db().await;
         
 
         Ok(vec![])
