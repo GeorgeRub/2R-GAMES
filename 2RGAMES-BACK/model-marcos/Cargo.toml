@@ -1,0 +1,16 @@
+[package]
+name = "model-marcos"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+syn = { version = "2", features = ["full", "parsing"] }
+quote = "1.0.42"
+#serde = { version = "1.0.228", features = ["derive"] }
+#aws-config = "1.8.10"
+#aws-sdk-dynamodb = "1.98.0"
+#database = {path = "../database"}
+#futures = "0.3.31"

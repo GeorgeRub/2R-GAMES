@@ -1,10 +1,7 @@
+
 use aws_sdk_dynamodb::Client;
-use aws_sdk_dynamodb::types::AttributeValue;
-use std::collections::HashMap;
-use std::io::Error;
 
 pub async fn get_connection_to_db() -> Client {
-    // tracing_subscriber::fmt::init();
     let config = aws_config::defaults(aws_config::BehaviorVersion::latest())
         .test_credentials()
         // DynamoDB run locally uses port 8000 by default.

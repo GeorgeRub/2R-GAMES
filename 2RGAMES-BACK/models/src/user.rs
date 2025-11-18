@@ -4,10 +4,8 @@ use crate::utils::{
 use aws_sdk_dynamodb::types::AttributeValue;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use std::io::Error;
+use std::rc::Rc;
 use uuid::Uuid;
-// use crate::connection_to_db::RustPersistenceApplication;
-use crate::Entity;
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct User {
@@ -31,6 +29,17 @@ impl User {
         }
     }
 
+    pub fn empty() -> Self {
+        Self {
+            user_id: None,
+            user_email: "".to_string(),
+            doc_id: None,
+            user_first_name: "".to_string(),
+            user_last_name: "".to_string(),
+            user_active: None,
+        }
+    }
+
     pub fn create_new_user(req_user: User) -> User {
         let mut user = User::new(
             req_user.user_email,
@@ -51,62 +60,41 @@ impl User {
         user
     }
 
-}
-
-impl Entity for User {
-    type Item = User;
-
-    fn serialize(&self) -> Option<HashMap<String, AttributeValue>> {
+    pub fn serialize_user(user: User) -> Option<HashMap<String, AttributeValue>> {
         let mut item = HashMap::new();
-        if let Some(user_id) = &self.user_id {
-            item.insert("user_id".to_string(), AttributeValue::S(user_id.clone()));
-        }
         item.insert(
             "user_email".to_string(),
-            AttributeValue::S(self.user_email.clone()),
+            AttributeValue::S(user.user_email.to_string()),
         );
         item.insert(
             "user_first_name".to_string(),
-            AttributeValue::S(self.user_first_name.clone()),
+            AttributeValue::S(user.user_first_name.to_string()),
         );
         item.insert(
             "user_last_name".to_string(),
-            AttributeValue::S(self.user_last_name.clone()),
+            AttributeValue::S(user.user_last_name.to_string()),
         );
 
-        if let Some(doc_id) = &self.doc_id {
-            item.insert("doc_id".to_string(), AttributeValue::S(doc_id.clone()));
+        if let Some(doc_id) = user.doc_id {
+            item.insert("doc_id".to_string(), AttributeValue::S(doc_id));
         }
-
-        if let Some(active) = &self.user_active {
-            item.insert(
-                "user_active".to_string(),
-                AttributeValue::Bool(self.user_active.unwrap()),
-            );
+        if let Some(user_id) = user.user_id {
+            item.insert("user_id".to_string(), AttributeValue::S(user_id));
+        }
+        if let Some(user_active) = user.user_active {
+            item.insert("user_active".to_string(), AttributeValue::Bool(user_active));
         }
         Some(item)
     }
 
-    fn deserialize(items: HashMap<String, AttributeValue>) -> Result<Self::Item, Error> {
-        Ok(User {
-            user_id: get_string_from_item_to_option("user_id", &items),
-            user_email: get_string_from_item("user_email", &items),
-            doc_id: get_string_from_item_to_option("doc_id", &items),
-            user_first_name: get_string_from_item("user_first_name", &items),
-            user_last_name: get_string_from_item("user_last_name", &items),
-            user_active: get_bool_from_item_to_option("user_active", &items),
-        })
-    }
-
-    fn save(&self) -> Result<Self::Item, Error> {
-        todo!()
-    }
-
-    fn update(&self) -> Result<Self::Item, Error> {
-        todo!()
-    }
-
-    fn delete(&self) -> Result<(), Error> {
-        todo!()
+    pub fn deserialize_user(values: HashMap<String, AttributeValue>) -> User {
+        let mut user = User::empty();
+        user.user_email = get_string_from_item("user_email", &values);
+        user.user_first_name = get_string_from_item("user_first_name", &values);
+        user.user_last_name = get_string_from_item("user_last_name", &values);
+        user.doc_id = get_string_from_item_to_option("doc_id", &values);
+        user.user_id = get_string_from_item_to_option("user_id", &values);
+        user.user_active = get_bool_from_item_to_option("user_active", &values);
+        user
     }
 }
