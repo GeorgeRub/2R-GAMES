@@ -3,6 +3,23 @@ Transform: AWS::Serverless-2016-10-31
 Description: Rust Lambda + API Gateway example
 
 Resources:
+  GetUserLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: lambda-user-get
+      Runtime: provided.al2
+      Architectures:
+        - x86_64
+      Handler: bootstrap
+      CodeUri: ./sam-user-get/target/lambda/sam-user-get/
+      MemorySize: 128
+      Timeout: 10
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /api/v1/user
+            Method: get
   PostUserLambda:
     Type: AWS::Serverless::Function
     Properties:

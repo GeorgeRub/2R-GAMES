@@ -4,15 +4,18 @@ use crate::utils::{
 use aws_sdk_dynamodb::types::AttributeValue;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use std::rc::Rc;
 use uuid::Uuid;
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct User {
+    // #[serde(rename = "SK")]
     pub user_id: Option<String>,
+    // #[serde(rename = "PK")]
     pub user_email: String,
     pub doc_id: Option<String>,
+    // #[serde(rename = "SK")]
     pub user_first_name: String,
+    // #[serde(rename = "SK")]
     pub user_last_name: String,
     pub user_active: Option<bool>,
 }
