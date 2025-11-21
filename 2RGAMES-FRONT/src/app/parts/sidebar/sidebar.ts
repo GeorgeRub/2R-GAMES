@@ -2,10 +2,11 @@ import { AfterViewInit, Component, ElementRef, OnInit, output, signal, ViewChild
 import { SideButton } from "./side-button/side-button";
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import { ionMenu } from "@ng-icons/ionicons";
+import { AdminModule } from "../../page/admin/admin-module";
 
 @Component({
   selector: 'app-sidebar',
-  imports: [SideButton, NgIcon],
+  imports: [SideButton, NgIcon, AdminModule],
   viewProviders: [provideIcons({ionMenu})],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css',

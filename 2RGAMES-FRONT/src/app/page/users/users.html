@@ -1,0 +1,27 @@
+<div class="w-full mx-auto">
+
+    <table>
+        <thead>
+            <tr>
+                <th>user_id</th>
+                <th>user_email</th>
+                <th>user_first_name</th>
+                <th>user_last_name</th>
+                <th>user_active</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (user of users(); track user.user_id) {
+            <tr>
+                <td>{{ user.user_id }}</td>
+                <td>{{ user.user_email }}</td>
+                <td>{{ user.user_first_name }}</td>
+                <td>{{ user.user_last_name }}</td>
+                <td>{{ user.user_active | boolean }}</td>
+            </tr>
+            }
+
+        </tbody>
+    </table>
+
+</div>

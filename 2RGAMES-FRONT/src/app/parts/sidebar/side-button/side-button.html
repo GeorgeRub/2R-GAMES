@@ -1,4 +1,4 @@
-<div class="flex">
+<div class="flex" [routerLink]="link()">
     <ng-icon size="20" color="red" name="ionAccessibilityOutline"/>    
     <div class="transition-opacity duration-500 ease-in-out" [style.opacity]="isOpenedMenu() ? '1' : '0'">
         @if (isOpenedMenu()) {

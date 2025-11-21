@@ -3,6 +3,16 @@ Transform: AWS::Serverless-2016-10-31
 Description: Rust Lambda + API Gateway example
 
 Resources:
+
+  ApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: dev
+      Cors:
+        AllowMethods: "'GET,POST,OPTIONS'"
+        AllowHeaders: "'Content-Type'"
+        AllowOrigins: "*"
+
   GetUserLambda:
     Type: AWS::Serverless::Function
     Properties:

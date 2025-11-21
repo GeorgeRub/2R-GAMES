@@ -3,10 +3,11 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
 import { featherAirplay } from '@ng-icons/feather-icons';
 import { heroUsers } from '@ng-icons/heroicons/outline';
 import { ionAccessibilityOutline } from '@ng-icons/ionicons';
+import { AdminModule } from "../../../page/admin/admin-module";
 
 @Component({
   selector: 'side-button',
-  imports: [NgIcon],
+  imports: [NgIcon, AdminModule],
   templateUrl: './side-button.html',
   styleUrl: './side-button.css',
   viewProviders: [provideIcons({ionAccessibilityOutline, featherAirplay, heroUsers })]
@@ -14,6 +15,8 @@ import { ionAccessibilityOutline } from '@ng-icons/ionicons';
 export class SideButton {
 
   isOpenedMenu = input.required<boolean>();
+
+  link = input.required<string>();
 
 
 }
