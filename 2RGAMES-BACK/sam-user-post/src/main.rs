@@ -1,11 +1,11 @@
-use http_service::{ResponseMessageBody, http_service_response};
-use lambda_http::Body::Text;
+use http_service::{http_service_response, ResponseMessageBody};
 use lambda_http::http::StatusCode;
-use lambda_http::{Body, Request, Response, run};
-use lambda_runtime::{Error, service_fn};
-use models::services::user_service::{UserService, UserServiceTrait};
+use lambda_http::Body::Text;
+use lambda_http::{run, Body, Request, Response};
+use lambda_runtime::{service_fn, Error};
+use models::http_communication::user_http_communication::PostUser;
+use models::services::user_service::UserService;
 use models::user::User;
-use uuid::Uuid;
 
 async fn function_handler(event: Request) -> Result<Response<Body>, Error> {
     let body = event.body();
@@ -18,23 +18,20 @@ async fn function_handler(event: Request) -> Result<Response<Body>, Error> {
         ));
     }
     match body {
-        Text(text) => match serde_json::from_str::<User>(text) {
-            Ok(mut user) => {
-                // let is_user_exist = User::is_user_exists(user.user_email.as_str()).await;
-                let is_user_exist = UserService::is_user_exists(&user.user_email.as_str()).await;
-                if is_user_exist {
-                    println!("User already exists");
-                    let message = format!("We have a user with email: {:?}", user.user_email);
-                    return Ok(http_service_response(
-                        ResponseMessageBody { message },
-                        StatusCode::CONFLICT,
-                    ));
-                }
-
-                user.user_id = Some(Uuid::now_v7().to_string());
-                user.user_active = Some(true);
+        Text(text) => match serde_json::from_str::<PostUser>(text) {
+            Ok(post_user) => {
+                let user = User::new(
+                    post_user.user_email,
+                    post_user.user_first_name,
+                    post_user.user_last_name,
+                );
                 match UserService::save(&user).await {
-                    Ok(saved_user) => Ok(http_service_response(saved_user, StatusCode::OK)),
+                    Ok(saved_user) => Ok(http_service_response(
+                        ResponseMessageBody {
+                            message: format!("User saved: {:?}", &user.user_email),
+                        },
+                        StatusCode::OK,
+                    )),
                     Err(e) => {
                         println!("Error saving user {:?}", e);
                         Ok(http_service_response(
