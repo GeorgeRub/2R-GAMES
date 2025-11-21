@@ -1,13 +1,13 @@
+// use dotenv::dotenv;
+use sqlx::postgres::PgPoolOptions;
+use sqlx::{Pool, Postgres};
 
-use aws_sdk_dynamodb::Client;
-
-pub async fn get_connection_to_db() -> Client {
-    let config = aws_config::defaults(aws_config::BehaviorVersion::latest())
-        .test_credentials()
-        // DynamoDB run locally uses port 8000 by default.
-        .endpoint_url("http://192.168.2.58:8000")
-        .load()
-        .await;
-    let dynamodb_local_config = aws_sdk_dynamodb::config::Builder::from(&config).build();
-    Client::from_conf(dynamodb_local_config)
+pub async fn get_connection_to_db() -> Pool<Postgres> {
+    // dotenv().ok();
+    // let url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    PgPoolOptions::new()
+        .max_connections(5)
+        .connect("postgres://george:george@192.168.2.58:5432/two-r-games")
+        .await
+        .expect("Error connecting to db")
 }

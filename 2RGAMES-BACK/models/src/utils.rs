@@ -16,10 +16,3 @@ pub fn get_string_from_item_to_option(
         .and_then(|v| v.as_s().ok())
         .map(|s| s.to_string())
 }
-
-pub fn get_bool_from_item_to_option(
-    value: &str,
-    items: &HashMap<String, AttributeValue>,
-) -> Option<bool> {
-    items.get(value).and_then(|v| v.as_bool().ok()).copied()
-}
